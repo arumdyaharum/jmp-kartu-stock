@@ -1,0 +1,92 @@
+﻿@model IndexViewModel;
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="alert alert-warning fade show" role="alert" id="alertWarningTop" style="@ViewData["HideAlert"]">
+    <strong>Perhatian:</strong> <span id="alertWarningTopMessage">@ViewData["AlertMessage"]</span>
+</div>
+
+<form action="/" method="get" id="searchForm" class="row align-items-end mb-3">
+    <div class="col-6">
+        <div class="row align-items-center mb-2">
+            <div class="col-auto">
+                <label for="startDate" class="col-form-label">Tanggal Awal</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="startDate" name="StartDate" class="form-control" placeholder="yyyy-MM-dd" value="@ViewData["StartDate"]">
+            </div>
+        </div>
+        <div class="row align-items-center mb-2">
+            <div class="col-auto">
+                <label for="endDate" class="col-form-label">Tanggal Akhir</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="endDate" name="EndDate" class="form-control" placeholder="yyyy-MM-dd" value="@ViewData["EndDate"]">
+            </div>
+        </div>
+        <div class="row align-items-center mb-2">
+            <div class="col-auto">
+                <label for="productId" class="col-form-label">Barang</label>
+            </div>
+            <div class="col-auto">
+                <select class="form-select" name="ProductID" id="productId">
+                    @if (string.IsNullOrEmpty((string)ViewData["ProductID"]))
+                    {
+                        <option value="">Pilih barang</option>
+                    }
+                    else
+                    {
+                        <option selected value="">Pilih barang</option>
+                    }
+                    @foreach (var product in Model.Products)
+                    {
+
+                        @if ((string)ViewData["ProductID"] == product.ProductID)
+                        {
+                            <option selected value="@product.ProductID">@(product.ProductID + "." + product.ProductName)</option>
+                        }
+                        else
+                        {
+                            <option value="@product.ProductID">@(product.ProductID + "." + product.ProductName)</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <button type="submit" class="btn btn-primary">Cari</button>
+    </div>
+</form>
+<table class="table table-hover table-bordered" id="transactionTable">
+    <thead>
+        <tr>
+            <th rowspan="2" class="align-middle">Tanggal</th>
+            <th rowspan="2" class="align-middle">No. Trx</th>
+            <th rowspan="2" class="align-middle">Keterangan</th>
+            <th>Masuk</th>
+            <th>Keluar</th>
+            <th>Saldo</th>
+        </tr>
+        <tr>
+            <th>Qty</th>
+            <th>Qty</th>
+            <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody id="dataTable">
+        @for (var i = 0; i < Model.Transactions.Count; i++)
+        {
+            <tr id="@("tableRow" + i)">
+                <td>@Model.Transactions[i].Date.ToString("yyyy-MM-dd")</td>
+                <td>@Model.Transactions[i].No</td>
+                <td>@Model.Transactions[i].Description</td>
+                <td>@Model.Transactions[i].PurchaseQuantity</td>
+                <td>@Model.Transactions[i].SalesQuantity</td>
+                <td>@Model.Transactions[i].Balance</td>
+            </tr>
+        }
+    </tbody>
+</table>
